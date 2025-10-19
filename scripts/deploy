@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+data_dir=$HOME/.local/share/diceware
+
+mkdir -p "$data_dir"
+ln -vsfnr -t "$data_dir" ./data/words
