@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+bin_file=$HOME/.local/bin/diceware
+
+mkdir -p "$(dirname "$bin_file")"
+ln -vsfnr ./bin/"${bin_file##*/}" "$bin_file"
+
 data_dir=$HOME/.local/share/diceware
 
 mkdir -p "$data_dir"

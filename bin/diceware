@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+self_name=${0##*/}
+
+data_dir=${XDG_DATA_HOME:-$HOME/.local/share}/$self_name
+
+declare -A cache=()
+
+phrase=
+exit_status=0
+roll_num=1
+
+while read -r roll; do
+    if [[ ! $roll =~ ^[1-6]+$ ]]; then
+        printf "%s: roll %d has an invalid digit (i.e. not between 1 and 6)\n" "$0" "$roll_num" >&2
+        exit_status=2
+        continue
+    fi
+
+    data_file=$data_dir/words/roll${#roll}
+
+    if [[ ! -f $data_file ]]; then
+        printf "%s: file does not exist: %q\n" "$0" "$data_file" >&2
+        exit_status=2
+        continue
+    fi
+
+    if [[ ! -v cache[$data_file] ]]; then
+        cache[$data_file]=$(<"$data_file")
+    fi
+
+    unset word
+
+    while read -r key value; do
+        if [[ $key == "$roll" ]]; then
+            word=$value
+            break
+        fi
+    done <<<"${cache[$data_file]}"
+
+    if [[ -v word ]]; then
+        phrase+="$word "
+    else
+        exit_status=9
+        printf "%s: no word found for roll %d\n" "$0" "$roll_num" >&2
+    fi
+
+    roll_num=$((roll_num + 1))
+done
+
+if ((exit_status == 0)); then
+    printf "%s\n" "${phrase:0:-1}"
+fi
+
+exit "$exit_status"
