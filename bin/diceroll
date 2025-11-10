@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+for count in "${@:-1}"; do
+    shuf --random-source=/dev/urandom -i 1-6 -n "$count" | paste -sd ''
+done

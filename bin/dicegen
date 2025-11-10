@@ -2,9 +2,7 @@
 
 set -euo pipefail
 
-self_name=${0##*/}
-
-data_dir=${XDG_DATA_HOME:-$HOME/.local/share}/$self_name
+data_dir=${XDG_DATA_HOME:-$HOME/.local/share}/diceware
 
 declare -A cache=()
 
