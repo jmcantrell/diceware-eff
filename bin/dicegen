@@ -4,7 +4,7 @@ set -euo pipefail
 
 self_name=${0##*/}
 
-data_dir=${XDG_DATA_HOME:-$HOME/.local/share}/diceware
+data_dir=${DICEGEN_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/diceware}
 
 usage="Generate a passphrase from dice rolls.
 
@@ -18,6 +18,9 @@ Options:
 
 Arguments:
     NUMBER    use the word list for NUMBER-letter words
+
+Environment:
+    DICEGEN_DATA_DIR[=${data_dir@Q}
 
 Dice rolls are read from stdin.
 Each line of stdin must be a string of digits of length NUMBER.

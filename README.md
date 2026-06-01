@@ -39,6 +39,14 @@ Update the word lists:
 
     ./script/update
 
+## Testing
+
+Ensure data files are valid and commands produce valid output:
+
+    ./scripts/test
+
+This should be run after every update.
+
 [idea]: https://theworld.com/~reinhold/diceware.html
 [wordlists]: https://www.eff.org/dice
 [xkcd]: https://xkcd.com/936/
