@@ -2,54 +2,89 @@
 
 set -euo pipefail
 
+self_name=${0##*/}
+
 data_dir=${XDG_DATA_HOME:-$HOME/.local/share}/diceware
+
+usage="Generate a passphrase from dice rolls.
+
+Usage:
+    $self_name [OPTIONS] NUMBER
+
+Options:
+    -h    show this help message and exit
+
+    -l    print the word list instead of generating passphrases
+
+Arguments:
+    NUMBER    use the word list for NUMBER-letter words
+
+Dice rolls are read from stdin.
+Each line of stdin must be a string of digits of length NUMBER.
+For example, 12345 would correspond to a five-letter word from the word list.
+Once EOF is reached, the complete space-delimited passphrase is printed to stdout.
+"
+
+unset list
+
+while getopts "lh" opt; do
+    case $opt in
+        l) list=true ;;
+        h)
+            printf "%s\n" "$usage"
+            exit
+            ;;
+        *) exit 64 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+word_length=${1:?missing word length}
+
+if [[ ! $word_length =~ ^[0-9]+$ ]]; then
+    printf "%s: number must be a positive integer\n" "$self_name" >&2
+    exit 64
+fi
+
+data_file=$data_dir/words/roll$word_length
+
+if [[ ! -f $data_file ]]; then
+    printf "%s: file does not exist: %q\n" "$self_name" "$data_file" >&2
+    exit 64
+fi
+
+if [[ -v list ]]; then
+    cat "$data_file"
+    exit
+fi
 
 declare -A cache=()
 
+while read -r digits word; do
+    cache[$digits]=$word
+done <"$data_file"
+
 phrase=
-exit_status=0
 roll_num=1
 
 while read -r roll; do
     if [[ ! $roll =~ ^[1-6]+$ ]]; then
         printf "%s: roll %d has an invalid digit (i.e. not between 1 and 6)\n" "$0" "$roll_num" >&2
-        exit_status=2
-        continue
+        exit 64
     fi
 
-    data_file=$data_dir/words/roll${#roll}
-
-    if [[ ! -f $data_file ]]; then
-        printf "%s: file does not exist: %q\n" "$0" "$data_file" >&2
-        exit_status=2
-        continue
+    if ((${#roll} != word_length)); then
+        printf "%s: roll %d must be %d digits, got %d\n" "$self_name" "$roll_num" "$word_length" "${#roll}" >&2
+        exit 64
     fi
 
-    if [[ ! -v cache[$data_file] ]]; then
-        cache[$data_file]=$(<"$data_file")
-    fi
-
-    unset word
-
-    while read -r key value; do
-        if [[ $key == "$roll" ]]; then
-            word=$value
-            break
-        fi
-    done <<<"${cache[$data_file]}"
-
-    if [[ -v word ]]; then
-        phrase+="$word "
-    else
-        exit_status=9
+    if [[ ! -v cache[$roll] ]]; then
         printf "%s: no word found for roll %d\n" "$0" "$roll_num" >&2
+        exit 65
     fi
 
+    phrase+="${cache[$roll]} "
     roll_num=$((roll_num + 1))
 done
 
-if ((exit_status == 0)); then
-    printf "%s\n" "${phrase:0:-1}"
-fi
-
-exit "$exit_status"
+printf "%s\n" "${phrase:0:-1}"

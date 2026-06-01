@@ -2,6 +2,37 @@
 
 set -euo pipefail
 
-for count in "${@:-1}"; do
-    shuf --random-source=/dev/urandom -i 1-6 -n "$count" | paste -sd ''
+self_name=${0##*/}
+
+usage="Simulate a series of dice rolls.
+
+Usage:
+    $self_name [OPTIONS] LENGTH COUNT
+
+Options:
+    -h    show this help message and exit
+
+Arguments:
+    LENGTH    each roll is LENGTH-digits long
+    COUNT     simulate COUNT rolls in total
+
+Each of the COUNT rolls are printed as a LENGTH-digit number to stdout.
+"
+
+while getopts "h" opt; do
+    case $opt in
+        h)
+            printf "%s\n" "$usage"
+            exit
+            ;;
+        *) exit 64 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+length=${1:?missing length}
+count=${2:?missing count}
+
+for ((i = 0; i < count; i++)); do
+    shuf --random-source=/dev/urandom -i 1-6 -n "$length" | paste -sd ''
 done
