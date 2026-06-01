@@ -30,6 +30,9 @@ Generate a pseudo-random six-word passphrase from five-digit rolls:
 
     diceroll 5 6 | dicegen 5
 
+Passphrases used to secure sensitive data should **always** be produced using
+physical dice rolls.
+
 ## Maintenance
 
 Update the word lists:
