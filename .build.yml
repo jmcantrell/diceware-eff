@@ -1,0 +1,15 @@
+---
+image: archlinux
+packages:
+  - parallel
+  - diffutils
+  - python-pipx
+sources:
+  - https://git.sr.ht/~jmcantrell/diceware
+tasks:
+  - lint-commits: |
+      cd diceware
+      pipx run --spec gitlint-core gitlint --ignore-stdin --commits "origin/main..HEAD"
+  - test: |
+      cd diceware
+      ./scripts/test
