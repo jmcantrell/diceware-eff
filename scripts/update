@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-for url_file in ./config/words/*; do
+for url_file in ./config/wordlists/*; do
     url=$(<"$url_file")
     data_file=./data/${url_file#*/config/}
     mkdir -p "$(dirname "$data_file")"

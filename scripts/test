@@ -8,7 +8,7 @@ self_name=${0##*/}
 export PATH=$PWD/bin:$PATH
 export DICEGEN_DATA_DIR=$PWD/data
 
-for data_file in "$DICEGEN_DATA_DIR"/words/roll+([0-9]); do
+for data_file in "$DICEGEN_DATA_DIR"/wordlists/roll+([0-9]); do
     printf "Testing data file: %q\n" "$data_file"
 
     length=${data_file##*/roll}

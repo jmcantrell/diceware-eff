@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+output_dir=${DESTDIR:-}${PREFIX:-/usr/local}
+
+install -p -m755 -D -t "$output_dir"/bin ./bin/*
+install -p -m644 -D -t "$output_dir"/lib/diceware ./lib/*
+install -p -m644 -D -t "$output_dir"/share/man/man1 ./man/*.1
+install -p -m644 -D -t "$output_dir"/share/doc/diceware ./README.md
+install -p -m644 -D -t "$output_dir"/share/licenses/diceware ./LICENSE
+install -p -m644 -D -t "$output_dir"/share/zsh/site-functions ./completion/zsh/*
+install -p -m644 -D -t "$output_dir"/share/bash-completion/completions ./completion/bash/*

@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+unset bump
+
+while getopts "Mmp" opt; do
+    case $opt in
+        M) bump=0 ;;
+        m) bump=1 ;;
+        p) bump=2 ;;
+        *) exit 64 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+labels=(major minor patch)
+
+version_file=./lib/version
+
+if [[ -f $version_file ]]; then
+    IFS=. read -ra parts <"$version_file"
+else
+    parts=(0 0 0)
+fi
+
+if [[ -v bump ]]; then
+    parts[bump]=$((parts[bump] + 1))
+    for ((i = bump + 1; i < ${#parts[@]}; i++)); do
+        parts[i]=0
+    done
+fi
+
+IFS=. version=${parts[*]}
+printf "%s\n" "$version" | tee "$version_file"
+
+if [[ -v bump ]]; then
+    git add "$version_file"
+    git commit -e -m "chore(release): bump version to $version" -m "This is a ${labels[$bump]} version change."
+    git tag -a -m "Release version $version" v"$version"
+fi

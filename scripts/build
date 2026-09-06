@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+for input in ./man/*.scd; do
+    output=$(dirname "$input")/$(basename "$input" .scd)
+    scdoc <"$input" >"$output"
+done
