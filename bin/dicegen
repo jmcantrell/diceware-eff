@@ -91,4 +91,6 @@ while read -r roll; do
 
 done <"$input_file"
 
-printf "%s\n" "${phrase:0:-1}"
+if [[ -n $phrase ]]; then
+    printf "%s\n" "${phrase:0:-1}"
+fi
