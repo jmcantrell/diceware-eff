@@ -11,6 +11,4 @@ else
 fi
 
 sed -i "1s:#\!.*/env \(.*\)$:#\!/usr/bin/\1:" ./bin/*
-
-sed -i -e "s:/usr/local/etc:$etc_dir:g" -e "s:/usr/local:$PREFIX:g" \
-    ./bin/* ./lib/* ./man/* ./completion/*/*
+sed -i -e "s:/usr/local/etc:$etc_dir:g" -e "s:/usr/local:$PREFIX:g" ./bin/* ./lib/* ./man/*
