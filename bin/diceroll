@@ -4,7 +4,7 @@ set -euo pipefail
 
 self_name=${0##*/}
 
-lib_dir=$PWD/lib
+lib_dir=${DICEWARE_LIB_DIR:-/usr/local/lib/$self_name}
 
 usage="Simulate a series of dice rolls.
 
