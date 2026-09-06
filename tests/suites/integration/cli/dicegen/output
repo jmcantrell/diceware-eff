@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Show that `dicegen` outputs the expected words.
+
+set -euo pipefail
+shopt -s extglob
+
+source "$TESTS_LIB_DIR"/init.bash
+
+for data_file in "$DICEWARE_DATA_DIR"/wordlists/roll+([0-9]); do
+    length=${data_file##*/roll}
+    count=$((RANDOM % 15 + 5))
+
+    readarray -t rolls < <(diceroll -"$length" -- "$count")
+
+    read -ra words < <(printf "%s\n" "${rolls[@]}" | dicegen -"$length")
+
+    for ((i = 0; i < ${#rolls[@]}; i++)); do
+        if ! expected_word=$(grep -m1 "^${rolls[i]}\b" "$data_file" | cut -d$'\t' -f2); then
+            printf "cound not find roll %q in data file: %q\n" "${rolls[i]}" "$data_file"
+            exit 1
+        fi
+        assert_equal "${words[i]}" "$expected_word"
+    done
+done

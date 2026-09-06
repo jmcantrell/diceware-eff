@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Show that `diceroll` defaults to outputting rolls for the long wordlist.
+
+set -euo pipefail
+
+source "$TESTS_LIB_DIR"/init.bash
+
+roll=$(diceroll 1)
+
+assert_equal "${#roll}" 5

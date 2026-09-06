@@ -1,99 +1,54 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-shopt -s extglob
 
 self_name=${0##*/}
 
-export PATH=$PWD/bin:$PATH
-export DICEGEN_LIB_DIR=$PWD/data
-export DICEGEN_DATA_DIR=$PWD/data
+usage="Run tests.
 
-for data_file in "$DICEGEN_DATA_DIR"/wordlists/roll+([0-9]); do
-    printf "Testing data file: %q\n" "$data_file"
+Usage:
+    $self_name [OPTIONS] [PATTERN...]
 
-    length=${data_file##*/roll}
+Options:
+    -h    show this help message and exit
 
-    num_lines=$(wc -l <"$data_file")
-    expected_num_lines=$((6 ** length))
-    if ((num_lines != expected_num_lines)); then
-        printf "%s: expected file to have %d lines, but it only had %d\n" "$self_name" "$expected_num_lines" "$num_lines" >&2
-        exit 1
-    fi
+    -v    print every test that's run, regardless of failures
+    -i    ignore case when matching PATTERN
 
-    line=0
-    declare -A seen_rolls=() seen_words=() word_for_roll=()
+Arguments:
+    PATTERN    only test files matching PATTERN
+"
 
-    while read -r roll word; do
-        line=$((line + 1))
+unset verbose
+find_opt="path"
 
-        if [[ -z $roll ]]; then
-            printf "%s: roll on line %d is missing\n" "$self_name" "$line" >&2
-            exit 1
-        fi
-        if ((${#roll} != length)); then
-            printf "%s: roll on line %d length is incorrect: %d != %d\n" "$self_name" "$line" "${#roll}" "$length" >&2
-            exit 1
-        fi
-        if [[ ! $roll =~ ^[1-6]+$ ]]; then
-            printf "%s: roll on line %d contains invalid digit (must be 1-6): %s\n" "$self_name" "$line" "$roll" >&2
-            exit 1
-        fi
-        if [[ -v seen_rolls[$roll] ]]; then
-            printf "%s: roll on line %d was also seen on line %d: %s\n" "$self_name" "$line" "${seen_rolls[$roll]}" "$roll" >&2
-            exit 1
-        fi
-        seen_rolls[$roll]=$line
-
-        if [[ -z $word ]]; then
-            printf "%s: word on line %d is missing\n" "$self_name" "$line" >&2
-            exit 1
-        fi
-        if [[ ! $word =~ ^[a-z-]+$ ]]; then
-            printf "%s: word on line %d is not lowercase alphabetic: %s\n" "$self_name" "$line" "$word" >&2
-            exit 1
-        fi
-        if [[ -v seen_words[$word] ]]; then
-            printf "%s: word on line %d was also seen on line %d: %s\n" "$self_name" "$line" "${seen_words[$word]}" "$word" >&2
-            exit 1
-        fi
-        seen_words[$word]=$line
-
-        word_for_roll[$roll]=$word
-
-    done <"$data_file"
-
-    count=$((RANDOM % 15 + 5))
-
-    readarray -t rolls < <(diceroll -"$length" -- "$count")
-
-    if ((${#rolls[@]} != count)); then
-        printf "%s: diceroll count is incorrect: %d != %d\n" "$self_name" "${#rolls[@]}" "$count" >&2
-        exit 1
-    fi
-
-    for ((i = 0; i < ${#rolls[@]}; i++)); do
-        if ((${#rolls[i]} != length)); then
-            printf "%s: diceroll line %d length is incorrect: %d != %d\n" "$self_name" $((i + 1)) "${#rolls[i]}" "$length" >&2
-            exit 1
-        fi
-    done
-
-    read -ra words < <(printf "%s\n" "${rolls[@]}" | dicegen -"$length")
-
-    for ((i = 0; i < ${#rolls[@]}; i++)); do
-        if [[ -z ${rolls[i]} ]]; then
-            printf "%s: dicegen word %d was empty\n" "$self_name" $((i + 1)) >&2
-            exit 1
-        fi
-        expected_word=${word_for_roll[${rolls[i]}]}
-        if [[ -z $expected_word ]]; then
-            printf "%s: dicegen word %d (%q) not found in file\n" "$self_name" $((i + 1)) "${words[i]}" >&2
-            exit 1
-        fi
-        if [[ ${words[i]} != "$expected_word" ]]; then
-            printf "%s: dicegen word %d did not match expected: %q != %q\n" "$self_name" $((i + 1)) "${words[i]}" "$expected_word" >&2
-            exit 1
-        fi
-    done
+while getopts "vih" opt; do
+    case $opt in
+        v) verbose=1 ;;
+        i) find_opt="ipath" ;;
+        h)
+            printf "%s\n" "$usage"
+            exit
+            ;;
+        *) exit 64 ;;
+    esac
 done
+shift $((OPTIND - 1))
+
+find_opts=()
+
+if (($# > 0)); then
+    pat_opts=()
+    for pattern in "$@"; do
+        pat_opts+=(-o -"$find_opt" "*$pattern*")
+    done
+    find_opts+=('(' "${pat_opts[@]:1}" ')')
+fi
+
+readarray -t -d '' test_files < <(
+    find ./tests/suites -type f -executable "${find_opts[@]}" -print0
+)
+
+export TIMEFORMAT="Ran ${#test_files[@]} tests in %3Rs"
+
+time printf "%s\0" "${test_files[@]}" | parallel -r0 -j0 ${verbose:+-v} --shuf ./scripts/test1

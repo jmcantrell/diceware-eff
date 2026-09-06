@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Show that `dicegen` displays the version when requested.
+
+set -euo pipefail
+
+source "$TESTS_LIB_DIR"/init.bash
+
+version=$(<"$LIB_DIR"/version)$'\n'
+
+for opt in -v --version; do
+    assert_success assert_stdout "$version" dicegen "$opt"
+done

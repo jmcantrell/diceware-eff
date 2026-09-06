@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Show that `dicegen` uses the long word list by default.
+
+set -euo pipefail
+
+source "$TESTS_LIB_DIR"/init.bash
+
+read -r roll expected_word < <(tail -n1 "$DICEWARE_DATA_DIR"/wordlists/roll5)
+
+word=$(dicegen <<<"$roll")
+
+assert_equal "$word" "$expected_word"

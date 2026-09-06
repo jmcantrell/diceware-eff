@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+# Show that wordlist data is correct and meets expectations.
+
+set -euo pipefail
+shopt -s extglob
+
+source "$TESTS_LIB_DIR"/init.bash
+
+export DICEGEN_LIB_DIR=$PWD/data
+export DICEGEN_DATA_DIR=$PWD/data
+
+for data_file in "$DICEGEN_DATA_DIR"/wordlists/roll+([0-9]); do
+    length=${data_file##*/roll}
+
+    num_lines=$(wc -l <"$data_file")
+    expected_num_lines=$((6 ** length))
+    assert_equal "$num_lines" "$expected_num_lines"
+
+    line=0
+    declare -A seen_rolls=() seen_words=()
+
+    while read -r roll word; do
+        line=$((line + 1))
+
+        assert_match "$roll" "^[1-6]{$length}$"
+
+        if [[ -v seen_rolls[$roll] ]]; then
+            printf "roll %q is on multiple lines: %q (lines %d and %d)\n" "$roll" "$data_file" "$line" "${seen_rolls[$roll]}" >&2
+            exit 1
+        fi
+        seen_rolls[$roll]=$line
+
+        assert_match "$word" "^[a-z-]+$"
+
+        if [[ -v seen_words[$word] ]]; then
+            printf "word %q is on multiple lines: %q (lines %d and %d)\n" "$word" "$data_file" "$line" "${seen_words[$word]}" >&2
+            exit 1
+        fi
+        seen_words[$word]=$line
+
+    done <"$data_file"
+done

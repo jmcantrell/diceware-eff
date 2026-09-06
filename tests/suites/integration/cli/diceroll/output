@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Show that `diceroll` outputs sample dice rolls in the expected format.
+
+set -euo pipefail
+shopt -s extglob
+
+source "$TESTS_LIB_DIR"/init.bash
+
+for data_file in "$DICEWARE_DATA_DIR"/wordlists/roll+([0-9]); do
+    length=${data_file##*/roll}
+    count=$((RANDOM % 15 + 5))
+
+    readarray -t rolls < <(diceroll -"$length" -- "$count")
+
+    assert_equal "${#rolls[@]}" "$count"
+
+    for ((i = 0; i < ${#rolls[@]}; i++)); do
+        assert_match "${rolls[i]}" "^[1-6]{$length}$"
+    done
+done

@@ -1,0 +1,4 @@
+export DICEWARE_LIB_DIR=$LIB_DIR
+export DICEWARE_DATA_DIR=$DATA_DIR
+
+source "$TESTS_LIB_DIR"/assert.bash
