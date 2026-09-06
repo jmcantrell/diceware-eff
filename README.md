@@ -6,32 +6,37 @@ had with a six-sided die and a list of words.
 
 I was first introduced to the concept of diceware via [this xkcd comic][xkcd],
 although I wasn't aware that the [idea][idea] had been around for quite some
-time. After deciding to get serious about securing my own systems, I found that
-the EFF had created a [revised set of wordlists][wordlists] with the goal of
-making the words more memorable and the passphrases stronger.
+time. I later found that the EFF had created a [revised set of
+wordlists][wordlists] with the goal of making the words more memorable and the
+passphrases stronger.
 
 ## Installation
 
-Install to your home directory:
+### Repository
 
-    ./scripts/deploy
+To install in the default location (`/usr/local`):
 
-## Usage
+    sudo ./scripts/install
 
-Generate a passphrase from dice rolls:
+To install in a different location:
 
-    dicegen -h
+    sudo PREFIX=/usr ./scripts/install
 
-Simulate dice rolls from the system's pseudo-random number generator:
+To install in a staging location:
 
-    diceroll -h
+    DESTDIR=./pkg ./scripts/install
 
-Generate a pseudo-random six-word passphrase from five-digit rolls:
+## Help
 
-    diceroll 5 6 | dicegen 5
+For command line usage:
 
-Passphrases used to secure sensitive data should **always** be produced using
-physical dice rolls.
+    dicegen --help
+    diceroll --help
+
+For detailed information:
+
+    man 1 dicegen
+    man 1 diceroll
 
 ## Maintenance
 
@@ -41,11 +46,18 @@ Update the word lists:
 
 ## Testing
 
-Ensure data files are valid and commands produce valid output:
+The following packages are required to run tests:
+
+- diffutils
+- parallel
+
+To run the included tests:
 
     ./scripts/test
 
-This should be run after every update.
+For command line usage:
+
+    ./scripts/test --help
 
 [idea]: https://theworld.com/~reinhold/diceware.html
 [wordlists]: https://www.eff.org/dice

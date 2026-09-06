@@ -6,7 +6,7 @@ self_name=${0##*/}
 
 lib_dir=${DICEWARE_LIB_DIR:-/usr/local/lib/$self_name}
 
-usage="Simulate a series of dice rolls.
+usage="Simulate a series of six-sided dice rolls.
 
 Usage:
     $self_name [OPTIONS] COUNT
