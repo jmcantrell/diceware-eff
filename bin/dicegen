@@ -4,8 +4,8 @@ set -euo pipefail
 
 self_name=${0##*/}
 
-lib_dir=${DICEWARE_LIB_DIR:-/usr/local/lib/$SELF_NAME}
-data_dir=${DICEWARE_DATA_DIR:-/usr/local/share/$SELF_NAME}
+lib_dir=${DICEWARE_LIB_DIR:-/usr/local/lib/$self_name}
+data_dir=${DICEWARE_DATA_DIR:-/usr/local/share/$self_name}
 
 usage="Generate a passphrase from dice rolls.
 
