@@ -6,6 +6,7 @@ shopt -s extglob
 self_name=${0##*/}
 
 export PATH=$PWD/bin:$PATH
+export DICEGEN_LIB_DIR=$PWD/data
 export DICEGEN_DATA_DIR=$PWD/data
 
 for data_file in "$DICEGEN_DATA_DIR"/wordlists/roll+([0-9]); do
@@ -64,7 +65,7 @@ for data_file in "$DICEGEN_DATA_DIR"/wordlists/roll+([0-9]); do
 
     count=$((RANDOM % 15 + 5))
 
-    readarray -t rolls < <(diceroll "$length" "$count")
+    readarray -t rolls < <(diceroll -"$length" -- "$count")
 
     if ((${#rolls[@]} != count)); then
         printf "%s: diceroll count is incorrect: %d != %d\n" "$self_name" "${#rolls[@]}" "$count" >&2
@@ -78,7 +79,7 @@ for data_file in "$DICEGEN_DATA_DIR"/wordlists/roll+([0-9]); do
         fi
     done
 
-    read -ra words < <(printf "%s\n" "${rolls[@]}" | dicegen "$length")
+    read -ra words < <(printf "%s\n" "${rolls[@]}" | dicegen -"$length")
 
     for ((i = 0; i < ${#rolls[@]}; i++)); do
         if [[ -z ${rolls[i]} ]]; then

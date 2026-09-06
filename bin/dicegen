@@ -4,57 +4,62 @@ set -euo pipefail
 
 self_name=${0##*/}
 
-data_dir=${DICEGEN_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/diceware}
+lib_dir=${DICEWARE_LIB_DIR:-/usr/local/lib/$SELF_NAME}
+data_dir=${DICEWARE_DATA_DIR:-/usr/local/share/$SELF_NAME}
 
 usage="Generate a passphrase from dice rolls.
 
 Usage:
-    $self_name [OPTIONS] NUMBER
+    $self_name [OPTIONS] [FILE]
 
 Options:
-    -h    show this help message and exit
+    -h, --help       show this help message and exit
+    -v, --version    show the program's version number and exit
 
-    -l    print the word list instead of generating passphrases
+    -l, --list    print the word list instead of generating a passphrase
+
+    -5    use the word list requiring five rolls per word (the default)
+    -4    use the word list requiring four rolls per word
 
 Arguments:
-    NUMBER    use the word list for NUMBER-letter words
+    FILE    read dice rolls from FILE (default: stdin)
 
-Environment:
-    DICEGEN_DATA_DIR[=${data_dir@Q}
-
-Dice rolls are read from stdin.
-Each line of stdin must be a string of digits of length NUMBER.
-For example, 12345 would correspond to a five-letter word from the word list.
-Once EOF is reached, the complete space-delimited passphrase is printed to stdout.
+See also:
+    dicegen(1)
 "
 
 unset list
+roll_count=5
 
-while getopts "lh" opt; do
-    case $opt in
-        l) list=true ;;
-        h)
-            printf "%s\n" "$usage"
-            exit
-            ;;
-        *) exit 64 ;;
-    esac
+while (($# > 0)); do
+    arg=$1
+    if [[ $arg != -* ]]; then
+        break
+    fi
+    shift
+    if [[ $arg == -- ]]; then
+        break
+    elif [[ $arg == -h || $arg == --help ]]; then
+        printf "%s\n" "$usage"
+        exit
+    elif [[ $arg == -v || $arg == --version ]]; then
+        printf "%s\n" "$(<"$lib_dir"/version)"
+        exit
+    elif [[ $arg == -4 ]]; then
+        roll_count=4
+    elif [[ $arg == -5 ]]; then
+        roll_count=5
+    elif [[ $arg == -l || $arg == --list ]]; then
+        list=true
+    else
+        printf "%s: invalid option: %q\n" "$self_name" "$arg" >&2
+        exit 64
+    fi
 done
-shift $((OPTIND - 1))
 
-word_length=${1:?missing word length}
+input_file=${1:-/dev/stdin}
 
-if [[ ! $word_length =~ ^[0-9]+$ ]]; then
-    printf "%s: number must be a positive integer\n" "$self_name" >&2
-    exit 64
-fi
-
-data_file=$data_dir/words/roll$word_length
-
-if [[ ! -f $data_file ]]; then
-    printf "%s: file does not exist: %q\n" "$self_name" "$data_file" >&2
-    exit 64
-fi
+data_file=$data_dir/wordlists/roll$roll_count
 
 if [[ -v list ]]; then
     cat "$data_file"
@@ -76,18 +81,14 @@ while read -r roll; do
         exit 64
     fi
 
-    if ((${#roll} != word_length)); then
-        printf "%s: roll %d must be %d digits, got %d\n" "$self_name" "$roll_num" "$word_length" "${#roll}" >&2
+    if ((${#roll} != roll_count)); then
+        printf "%s: roll %d must be %d digits, got %d\n" "$self_name" "$roll_num" "$roll_count" "${#roll}" >&2
         exit 64
-    fi
-
-    if [[ ! -v cache[$roll] ]]; then
-        printf "%s: no word found for roll %d\n" "$0" "$roll_num" >&2
-        exit 65
     fi
 
     phrase+="${cache[$roll]} "
     roll_num=$((roll_num + 1))
-done
+
+done <"$input_file"
 
 printf "%s\n" "${phrase:0:-1}"
