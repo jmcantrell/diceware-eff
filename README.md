@@ -12,7 +12,7 @@ passphrases stronger.
 
 ## Installation
 
-### Repository
+### Manual
 
 To install in the default location (`/usr/local`):
 
@@ -20,11 +20,23 @@ To install in the default location (`/usr/local`):
 
 To install in a different location:
 
+    PREFIX=/usr ./scripts/prepare
     sudo PREFIX=/usr ./scripts/install
 
-To install in a staging location:
+*NOTE*: `./scripts/prepare` mutates files in the working tree. Run it against a
+clean checkout. If you need to change `PREFIX`, discard local changes first
+(`git checkout .`) and re-run.
+
+To install in a staging location, set `DESTDIR` for the install script:
 
     DESTDIR=./pkg ./scripts/install
+
+### Arch User Repository
+
+There are two packages available for Arch Linux, available via the AUR:
+
+- [diceware-eff][pkg-aur] (stable, based on the latest tag)
+- [diceware-eff-git][pkg-aur-git] (unstable, based on the latest commit)
 
 ## Help
 
@@ -59,6 +71,8 @@ For command line usage:
 
     ./scripts/test --help
 
+[pkg-aur]: https://aur.archlinux.org/packages/diceware-eff/
+[pkg-aur-git]: https://aur.archlinux.org/packages/diceware-eff-git/
+[xkcd]: https://xkcd.com/936/
 [idea]: https://theworld.com/~reinhold/diceware.html
 [wordlists]: https://www.eff.org/dice
-[xkcd]: https://xkcd.com/936/
