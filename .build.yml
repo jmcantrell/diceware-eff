@@ -5,11 +5,11 @@ packages:
   - diffutils
   - python-pipx
 sources:
-  - https://git.sr.ht/~jmcantrell/diceware
+  - https://git.sr.ht/~jmcantrell/diceware-eff
 tasks:
   - lint-commits: |
-      cd diceware
+      cd diceware-eff
       pipx run --spec gitlint-core gitlint --ignore-stdin --commits "origin/main..HEAD"
   - test: |
-      cd diceware
+      cd diceware-eff
       ./scripts/test
