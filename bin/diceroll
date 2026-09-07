@@ -55,6 +55,5 @@ done
 word_count=${1:?missing word count}
 
 for ((i = 0; i < word_count; i++)); do
-    shuf --random-source=/dev/urandom -i 1-6 -n "$roll_count" | tr -d '\n'
-    printf '\n'
+    shuf --random-source=/dev/urandom -i 1-6 -n "$roll_count" | paste -s -d ''
 done
