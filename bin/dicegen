@@ -4,6 +4,8 @@ set -euo pipefail
 
 self_name=${0##*/}
 
+data_dir=${DICEWARE_DATA_DIR:-./share}
+
 usage="Generate a passphrase from six-sided dice rolls.
 
 Usage:
@@ -56,7 +58,7 @@ done
 
 input_file=${1:-/dev/stdin}
 
-wordlist_file=./share/wordlists/roll$roll_count
+wordlist_file=$data_dir/wordlists/roll$roll_count
 
 if [[ -v list ]]; then
     cat "$wordlist_file"
