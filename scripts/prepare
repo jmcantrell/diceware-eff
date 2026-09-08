@@ -4,11 +4,9 @@ set -euo pipefail
 
 PREFIX=${PREFIX:-/usr/local}
 
-if [[ $PREFIX == /usr ]]; then
-    etc_dir=/etc
-else
-    etc_dir=$PREFIX/etc
-fi
-
 sed -i "1s:#\!.*/env \(.*\)$:#\!/usr/bin/\1:" ./bin/*
-sed -i -e "s:/usr/local/etc:$etc_dir:g" -e "s:/usr/local:$PREFIX:g" ./bin/* ./lib/* ./man/*
+
+sed -i \
+    -e "s:\./bin:$PREFIX/bin:g" \
+    -e "s:\./lib:$PREFIX/lib/diceware:g" \
+    ./bin/* ./lib/* ./man/*

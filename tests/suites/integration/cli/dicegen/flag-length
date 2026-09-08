@@ -4,9 +4,9 @@
 
 set -euo pipefail
 
-source "$TESTS_LIB_DIR"/init.bash
+source ./tests/lib/init.bash
 
-read -r roll expected_word < <(tail -n1 "$DICEWARE_DATA_DIR"/wordlists/roll5)
+read -r roll expected_word < <(tail -n1 ./share/wordlists/roll5)
 
 word=$(dicegen <<<"$roll")
 

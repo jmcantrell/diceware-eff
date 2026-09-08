@@ -4,9 +4,9 @@
 
 set -euo pipefail
 
-source "$TESTS_LIB_DIR"/init.bash
+source ./tests/lib/init.bash
 
-version=$(<"$LIB_DIR"/version)$'\n'
+version=$(<./lib/version)$'\n'
 
 for opt in -v --version; do
     assert_success assert_stdout "$version" diceroll "$opt"

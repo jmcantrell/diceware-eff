@@ -5,10 +5,10 @@
 set -euo pipefail
 shopt -s extglob
 
-source "$TESTS_LIB_DIR"/init.bash
+source ./tests/lib/init.bash
 
-for data_file in "$DICEWARE_DATA_DIR"/wordlists/roll+([0-9]); do
-    length=${data_file##*/roll}
+for wordlist_file in ./share/wordlists/roll+([0-9]); do
+    length=${wordlist_file##*/roll}
     count=$((RANDOM % 15 + 5))
 
     readarray -t rolls < <(diceroll -"$length" -- "$count")

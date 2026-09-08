@@ -14,22 +14,17 @@ passphrases stronger.
 
 ### Manual
 
-To install in the default location (`/usr/local`):
+First, prepare the files for installation:
 
-    sudo ./scripts/install
+    PREFIX=/usr/local ./scripts/prepare
 
-To install in a different location:
+Then, install files directly to the prefix:
 
-    PREFIX=/usr ./scripts/prepare
-    sudo PREFIX=/usr ./scripts/install
+    PREFIX=/usr/local sudo ./scripts/install
 
-*NOTE*: `./scripts/prepare` mutates files in the working tree. Run it against a
-clean checkout. If you need to change `PREFIX`, discard local changes first
-(`git checkout .`) and re-run.
+Or, install files elsewhere, like a staging location:
 
-To install in a staging location, set `DESTDIR` for the install script:
-
-    DESTDIR=./pkg ./scripts/install
+    DESTDIR=./pkg PREFIX=/usr/local ./scripts/install
 
 ### Arch User Repository
 

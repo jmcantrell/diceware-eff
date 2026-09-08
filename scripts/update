@@ -2,10 +2,12 @@
 
 set -euo pipefail
 
-for url_file in ./config/wordlists/*; do
-    url=$(<"$url_file")
-    data_file=./data/${url_file#*/config/}
-    mkdir -p "$(dirname "$data_file")"
-    printf "downloading: %s => %s\n" "$url" "$data_file"
-    curl -o "$data_file" -z "$data_file" "$url"
+for config_file in ./config/wordlists/*; do
+    url=$(<"$config_file")
+    wordlist_file=./share/${config_file#*/config/}
+
+    printf "Downloading: %s => %s\n" "$url" "$wordlist_file"
+
+    mkdir -p "$(dirname "$wordlist_file")"
+    curl -o "$wordlist_file" -z "$wordlist_file" "$url"
 done

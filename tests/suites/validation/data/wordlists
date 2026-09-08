@@ -5,15 +5,12 @@
 set -euo pipefail
 shopt -s extglob
 
-source "$TESTS_LIB_DIR"/init.bash
+source ./tests/lib/init.bash
 
-export DICEGEN_LIB_DIR=$PWD/data
-export DICEGEN_DATA_DIR=$PWD/data
+for wordlist_file in ./share/wordlists/roll+([0-9]); do
+    length=${wordlist_file##*/roll}
 
-for data_file in "$DICEGEN_DATA_DIR"/wordlists/roll+([0-9]); do
-    length=${data_file##*/roll}
-
-    num_lines=$(wc -l <"$data_file")
+    num_lines=$(wc -l <"$wordlist_file")
     expected_num_lines=$((6 ** length))
     assert_equal "$num_lines" "$expected_num_lines"
 
@@ -26,7 +23,7 @@ for data_file in "$DICEGEN_DATA_DIR"/wordlists/roll+([0-9]); do
         assert_match "$roll" "^[1-6]{$length}$"
 
         if [[ -v seen_rolls[$roll] ]]; then
-            printf "roll %q is on multiple lines: %q (lines %d and %d)\n" "$roll" "$data_file" "$line" "${seen_rolls[$roll]}" >&2
+            printf "roll %q is on multiple lines: %q (lines %d and %d)\n" "$roll" "$wordlist_file" "$line" "${seen_rolls[$roll]}" >&2
             exit 1
         fi
         seen_rolls[$roll]=$line
@@ -34,10 +31,10 @@ for data_file in "$DICEGEN_DATA_DIR"/wordlists/roll+([0-9]); do
         assert_match "$word" "^[a-z-]+$"
 
         if [[ -v seen_words[$word] ]]; then
-            printf "word %q is on multiple lines: %q (lines %d and %d)\n" "$word" "$data_file" "$line" "${seen_words[$word]}" >&2
+            printf "word %q is on multiple lines: %q (lines %d and %d)\n" "$word" "$wordlist_file" "$line" "${seen_words[$word]}" >&2
             exit 1
         fi
         seen_words[$word]=$line
 
-    done <"$data_file"
+    done <"$wordlist_file"
 done

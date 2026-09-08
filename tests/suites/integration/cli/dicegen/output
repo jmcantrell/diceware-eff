@@ -5,10 +5,10 @@
 set -euo pipefail
 shopt -s extglob
 
-source "$TESTS_LIB_DIR"/init.bash
+source ./tests/lib/init.bash
 
-for data_file in "$DICEWARE_DATA_DIR"/wordlists/roll+([0-9]); do
-    length=${data_file##*/roll}
+for wordlist_file in ./share/wordlists/roll+([0-9]); do
+    length=${wordlist_file##*/roll}
     count=$((RANDOM % 15 + 5))
 
     readarray -t rolls < <(diceroll -"$length" -- "$count")
@@ -16,8 +16,8 @@ for data_file in "$DICEWARE_DATA_DIR"/wordlists/roll+([0-9]); do
     read -ra words < <(printf "%s\n" "${rolls[@]}" | dicegen -"$length")
 
     for ((i = 0; i < ${#rolls[@]}; i++)); do
-        if ! expected_word=$(grep -m1 "^${rolls[i]}\b" "$data_file" | cut -d$'\t' -f2); then
-            printf "cound not find roll %q in data file: %q\n" "${rolls[i]}" "$data_file"
+        if ! expected_word=$(grep -m1 "^${rolls[i]}\b" "$wordlist_file" | cut -d$'\t' -f2); then
+            printf "cound not find roll %q in wordlist: %q\n" "${rolls[i]}" "$wordlist_file"
             exit 1
         fi
         assert_equal "${words[i]}" "$expected_word"

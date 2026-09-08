@@ -5,13 +5,13 @@
 set -euo pipefail
 shopt -s extglob
 
-source "$TESTS_LIB_DIR"/init.bash
+source ./tests/lib/init.bash
 
-for data_file in "$DICEWARE_DATA_DIR"/wordlists/roll+([0-9]); do
-    length=${data_file##*/roll}
+for wordlist_file in ./share/wordlists/roll+([0-9]); do
+    length=${wordlist_file##*/roll}
     for opt in -l --list; do
-        if ! diff -u -- "$data_file" <(dicegen -"$length" "$opt"); then
-            printf "output for %s did not match data file: %q\n" "$opt" "$data_file"
+        if ! diff -u -- "$wordlist_file" <(dicegen -"$length" "$opt"); then
+            printf "output for %s did not match wordlist: %q\n" "$opt" "$wordlist_file"
         fi
     done
 done

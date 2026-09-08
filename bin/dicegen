@@ -4,9 +4,6 @@ set -euo pipefail
 
 self_name=${0##*/}
 
-lib_dir=${DICEWARE_LIB_DIR:-/usr/local/lib/$self_name}
-data_dir=${DICEWARE_DATA_DIR:-/usr/local/share/$self_name}
-
 usage="Generate a passphrase from six-sided dice rolls.
 
 Usage:
@@ -43,7 +40,7 @@ while (($# > 0)); do
         printf "%s\n" "$usage"
         exit
     elif [[ $arg == -v || $arg == --version ]]; then
-        printf "%s\n" "$(<"$lib_dir"/version)"
+        printf "%s\n" "$(<./lib/version)"
         exit
     elif [[ $arg == -4 ]]; then
         roll_count=4
@@ -59,10 +56,10 @@ done
 
 input_file=${1:-/dev/stdin}
 
-data_file=$data_dir/wordlists/roll$roll_count
+wordlist_file=./share/wordlists/roll$roll_count
 
 if [[ -v list ]]; then
-    cat "$data_file"
+    cat "$wordlist_file"
     exit
 fi
 
@@ -70,7 +67,7 @@ declare -A cache=()
 
 while read -r digits word; do
     cache[$digits]=$word
-done <"$data_file"
+done <"$wordlist_file"
 
 phrase=
 roll_num=1
