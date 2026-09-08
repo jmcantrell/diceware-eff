@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-shfmt --write --case-indent --indent 4 .
+./scripts/shellfiles | xargs -r0 shfmt -w -i 4 -ci --

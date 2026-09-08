@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-set -euo pipefail
-
-while IFS= read -r -d '' file; do
-    if [[ $file =~ \.(ba)?sh$ || $(head -n1 -- "$file") =~ ^#!/usr/bin/env\ (ba)?sh$ ]]; then
-        printf "%s\0" "$file"
-    fi
-done < <(git ls-files -z) | xargs -r0 shellcheck --

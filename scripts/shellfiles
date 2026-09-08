@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+file_pat='\.(ba)?sh$'
+shebang_pat='^#!.*[/ ](ba)?sh$'
+
+while IFS= read -r -d '' file; do
+    unset include
+    if [[ $file =~ $file_pat ]]; then
+        include=true
+    elif grep -qI . -- "$file"; then
+        first_line=$(head -n1 -- "$file")
+        if [[ $first_line =~ $shebang_pat ]]; then
+            include=true
+        fi
+    fi
+    if [[ -v include ]]; then
+        printf "%s\0" "$file"
+    fi
+done < <(find -L . -name .git -prune -o -type f -print0)

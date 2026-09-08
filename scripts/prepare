@@ -4,9 +4,11 @@ set -euo pipefail
 
 PREFIX=${PREFIX:-/usr/local}
 
-sed -i "1s:#\!.*/env \(.*\)$:#\!/usr/bin/\1:" ./bin/*
+sed -i \
+    -e "1s:#\!.*/env \(.*\)$:#\!/usr/bin/\1:" \
+    ./bin/*
 
 sed -i \
-    -e "s:\./bin:$PREFIX/bin:g" \
-    -e "s:\./lib:$PREFIX/lib/diceware:g" \
+    -e "s:\./bin\b:$PREFIX/bin:g" \
+    -e "s:\./lib\b:$PREFIX/lib/diceware:g" \
     ./bin/* ./lib/* ./man/*
