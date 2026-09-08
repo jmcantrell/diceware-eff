@@ -4,6 +4,7 @@ set -euo pipefail
 
 self_name=${0##*/}
 
+lib_dir=${DICEWARE_LIB_DIR:-./lib}
 data_dir=${DICEWARE_DATA_DIR:-./share}
 
 usage="Generate a passphrase from six-sided dice rolls.
@@ -42,7 +43,7 @@ while (($# > 0)); do
         printf "%s\n" "$usage"
         exit
     elif [[ $arg == -v || $arg == --version ]]; then
-        printf "%s\n" "$(<./lib/version)"
+        printf "%s\n" "$(<"$lib_dir"/version)"
         exit
     elif [[ $arg == -4 ]]; then
         roll_count=4
