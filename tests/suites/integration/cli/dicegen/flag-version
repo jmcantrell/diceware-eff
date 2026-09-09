@@ -9,5 +9,6 @@ source ./tests/lib/init.bash
 version=$(<./lib/version)$'\n'
 
 for opt in -v --version; do
-    assert_success assert_stdout "$version" dicegen "$opt"
+    assert_success assert_stdout "$version" \
+        dicegen "$opt"
 done

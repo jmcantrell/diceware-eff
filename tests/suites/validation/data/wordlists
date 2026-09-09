@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Show that wordlist data is correct and meets expectations.
+# Show that wordlist data is well-formed and meets expectations.
 
 set -euo pipefail
 shopt -s extglob

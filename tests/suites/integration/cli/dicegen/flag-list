@@ -10,7 +10,7 @@ source ./tests/lib/init.bash
 for wordlist_file in ./share/wordlists/roll+([0-9]); do
     length=${wordlist_file##*/roll}
     for opt in -l --list; do
-        if ! diff -u -- "$wordlist_file" <(dicegen -"$length" "$opt"); then
+        if ! cmp -s -- "$wordlist_file" <(dicegen -"$length" "$opt"); then
             printf "output for %s did not match wordlist: %q\n" "$opt" "$wordlist_file"
         fi
     done
