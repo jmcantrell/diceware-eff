@@ -64,7 +64,7 @@ To run the included tests:
 
 For command line usage:
 
-    ./scripts/test --help
+    ./scripts/test -h
 
 [pkg-aur]: https://aur.archlinux.org/packages/diceware-eff/
 [pkg-aur-git]: https://aur.archlinux.org/packages/diceware-eff-git/
