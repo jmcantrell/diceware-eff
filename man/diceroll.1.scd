@@ -21,11 +21,11 @@ This command will output lines suitable to be read with `dicegen`.
 
 # OPTIONS
 
-*-5*
-	Use the word list requiring five rolls per word (the default)
+*-5*, *--long*
+	Simulate five rolls per line of output (the default)
 
-*-4*
-	Use the word list requiring four rolls per word
+*-4*, *--short*
+	Simulate four rolls per line of output
 
 # ARGUMENTS
 

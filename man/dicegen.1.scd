@@ -12,14 +12,14 @@ dicegen [OPTIONS] [FILE]
 
 # OPTIONS
 
-*-l, --list*
-	Print the word list instead of generating a passphrase.
-
-*-5*
+*-5*, *--long*
 	Use the word list requiring five rolls per word (the default)
 
-*-4*
+*-4*, *--short*
 	Use the word list requiring four rolls per word
+
+*-l*, *--list*
+	Print the word list instead of generating a passphrase.
 
 # ARGUMENTS
 

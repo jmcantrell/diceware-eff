@@ -15,8 +15,8 @@ Options:
     -h, --help       show this help message and exit
     -v, --version    show the program's version number and exit
 
-    -5    simulate five rolls per word (the default)
-    -4    simulate four rolls per word
+    -5, --long     simulate five rolls per word (the default)
+    -4, --short    simulate four rolls per word
 
 Arguments:
     COUNT     simulate rolls for COUNT words
@@ -42,9 +42,9 @@ while (($# > 0)); do
     elif [[ $arg == -v || $arg == --version ]]; then
         printf "%s\n" "$(<"$lib_dir"/version)"
         exit
-    elif [[ $arg == -4 ]]; then
+    elif [[ $arg == -4 || $arg == --short ]]; then
         roll_count=4
-    elif [[ $arg == -5 ]]; then
+    elif [[ $arg == -5 || $arg == --long ]]; then
         roll_count=5
     else
         printf "%s: invalid option: %q\n" "$self_name" "$arg" >&2

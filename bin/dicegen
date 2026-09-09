@@ -16,10 +16,10 @@ Options:
     -h, --help       show this help message and exit
     -v, --version    show the program's version number and exit
 
-    -l, --list    print the word list instead of generating a passphrase
+    -5, --long     use the word list requiring five rolls per word (the default)
+    -4, --short    use the word list requiring four rolls per word
 
-    -5    use the word list requiring five rolls per word (the default)
-    -4    use the word list requiring four rolls per word
+    -l, --list    print the word list instead of generating a passphrase
 
 Arguments:
     FILE    read dice rolls from FILE (default: stdin)
@@ -45,9 +45,9 @@ while (($# > 0)); do
     elif [[ $arg == -v || $arg == --version ]]; then
         printf "%s\n" "$(<"$lib_dir"/version)"
         exit
-    elif [[ $arg == -4 ]]; then
+    elif [[ $arg == -4 || $arg == --short ]]; then
         roll_count=4
-    elif [[ $arg == -5 ]]; then
+    elif [[ $arg == -5 || $arg == --long ]]; then
         roll_count=5
     elif [[ $arg == -l || $arg == --list ]]; then
         list=true
