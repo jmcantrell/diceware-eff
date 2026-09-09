@@ -12,6 +12,7 @@ for wordlist_file in ./share/wordlists/roll+([0-9]); do
     for opt in -l --list; do
         if ! cmp -s -- "$wordlist_file" <(dicegen -"$length" "$opt"); then
             printf "output for %s did not match wordlist: %q\n" "$opt" "$wordlist_file"
+            exit 1
         fi
     done
 done
