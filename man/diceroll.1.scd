@@ -30,7 +30,8 @@ This command will output lines suitable to be read with `dicegen`.
 # ARGUMENTS
 
 *COUNT*
-	Specify how many words worth of dice rolls to print.
+	Specify how many words worth of dice rolls to print. Each line of output
+	corresponds to a single word of the passphrase.
 
 # SEE ALSO
 
