@@ -73,21 +73,21 @@ while read -r digits word; do
 done <"$wordlist_file"
 
 phrase=
-roll_num=1
+line=1
 
 while read -r roll; do
     if [[ ! $roll =~ ^[1-6]+$ ]]; then
-        printf "%s: roll %d has an invalid digit (i.e. not between 1 and 6)\n" "$0" "$roll_num" >&2
+        printf "%s: line %d must only contain digits between 1 and 6\n" "$self_name" "$line" >&2
         exit 64
     fi
 
     if ((${#roll} != roll_count)); then
-        printf "%s: roll %d must be %d digits, got %d\n" "$self_name" "$roll_num" "$roll_count" "${#roll}" >&2
+        printf "%s: line %d must be exactly %d digits\n" "$self_name" "$line" "$roll_count" >&2
         exit 64
     fi
 
     phrase+="${cache[$roll]} "
-    roll_num=$((roll_num + 1))
+    line=$((line + 1))
 
 done <"$input_file"
 
