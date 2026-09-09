@@ -3,7 +3,6 @@
 # Show that `dicegen` can accept input as a file argument.
 
 set -euo pipefail
-shopt -s extglob
 
 source ./tests/lib/init.bash
 
