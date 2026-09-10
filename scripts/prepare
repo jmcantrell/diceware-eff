@@ -11,4 +11,5 @@ sed -i \
 sed -i \
     -e "s:\./bin\b:$PREFIX/bin:g" \
     -e "s:\./lib\b:$PREFIX/lib/diceware:g" \
+    -e "s:\./share\b:$PREFIX/share/diceware:g" \
     ./bin/* ./lib/* ./man/*
