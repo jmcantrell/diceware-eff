@@ -43,7 +43,7 @@ while (($# > 0)); do
         printf "%s\n" "$usage"
         exit
     elif [[ $arg == -v || $arg == --version ]]; then
-        cat "$lib_dir"/version
+        cat -- "$lib_dir"/version
         exit
     elif [[ $arg == -4 || $arg == --short ]]; then
         roll_count=4
@@ -62,7 +62,7 @@ input_file=${1:-/dev/stdin}
 wordlist_file=$data_dir/wordlists/roll$roll_count
 
 if [[ -v list ]]; then
-    cat "$wordlist_file"
+    cat -- "$wordlist_file"
     exit
 fi
 
