@@ -1,8 +1,8 @@
 ---
 image: archlinux
 packages:
-  - parallel
-  - diffutils
+  - bats-assert
+  - bats-file
   - python-pipx
 sources:
   - https://git.sr.ht/~jmcantrell/diceware-eff
