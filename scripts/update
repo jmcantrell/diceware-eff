@@ -2,12 +2,26 @@
 
 set -euo pipefail
 
-for config_file in ./config/wordlists/*; do
+self_name=${0##*/}
+
+temp_dir=$(mktemp -td -- "$self_name.$$".XXXXXXXXXX)
+trap 'rm -rf -- "$temp_dir"' EXIT
+
+for roll_count in 4 5; do
+    config_file=./config/wordlists/roll$roll_count
+
     url=$(<"$config_file")
-    wordlist_file=./share/${config_file#*/config/}
+    wordlist_file=./share/wordlists/roll$roll_count
 
     printf "Downloading: %s => %s\n" "$url" "$wordlist_file"
 
-    mkdir -p "$(dirname "$wordlist_file")"
-    curl -o "$wordlist_file" -z "$wordlist_file" "$url"
+    temp_file=$temp_dir/${wordlist_file##*/}
+
+    mkdir -p -- "${wordlist_file%/*}"
+    curl -o "$temp_file" -z "$wordlist_file" "$url"
+
+    if [[ -s $temp_file ]]; then
+        ./scripts/ckwordlist "$roll_count" "$temp_file"
+        mv -v -- "$temp_file" "$wordlist_file"
+    fi
 done

@@ -45,12 +45,6 @@ For detailed information:
     man 1 dicegen
     man 1 diceroll
 
-## Maintenance
-
-Update the word lists:
-
-    ./script/update
-
 ## Testing
 
 The following packages are required to run tests:
