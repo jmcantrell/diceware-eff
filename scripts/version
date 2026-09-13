@@ -38,10 +38,8 @@ shift $((OPTIND - 1))
 
 labels=(major minor patch)
 
-version_file=./lib/version
-
-if [[ -f $version_file ]]; then
-    IFS=. read -ra parts <"$version_file"
+if [[ -f ./lib/version ]]; then
+    IFS=. read -ra parts <./lib/version
 else
     parts=(0 0 0)
 fi
@@ -61,9 +59,9 @@ if [[ ! -v bump ]]; then
     exit
 fi
 
-printf "%s\n" "$version" >"$version_file"
+printf "%s\n" "$version" >./lib/version
 
-git add "$version_file"
+git add ./lib/version
 
 git commit -e \
     -m "build(release): bump version to $version" \

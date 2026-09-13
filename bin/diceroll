@@ -22,7 +22,7 @@ Arguments:
     COUNT     simulate rolls for COUNT words
 
 See also:
-    dicegen(1)
+    diceroll(1)
 "
 
 unset list
