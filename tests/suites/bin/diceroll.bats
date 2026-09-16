@@ -1,6 +1,6 @@
 source ./tests/lib/init.bash
 
-export BATS_TEST_NAME_PREFIX='diceroll '
+export BATS_TEST_NAME_PREFIX='bin/diceroll '
 
 setup() {
     lib_dir=$BATS_TEST_TMPDIR/lib
