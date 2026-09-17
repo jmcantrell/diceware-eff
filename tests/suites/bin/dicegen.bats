@@ -16,7 +16,8 @@ assert_help() {
 }
 
 for flag in -h --help; do
-    bats_test_function --description "displays help with $flag" -- \
+    bats_test_function \
+        --description "displays help with $flag" -- \
         assert_help "$flag"
 done
 
@@ -28,7 +29,8 @@ assert_version() {
 }
 
 for flag in -v --version; do
-    bats_test_function --description "prints version with $flag" -- \
+    bats_test_function \
+        --description "prints version with $flag" -- \
         assert_version "$flag"
 done
 
@@ -49,16 +51,19 @@ assert_short_wordlist() {
 }
 
 for list_opt in -l --list; do
-    bats_test_function --description "prints the long word list by default" -- \
+    bats_test_function \
+        --description "prints the long word list by default" -- \
         assert_long_wordlist "$list_opt"
 
     for length_opt in -5 --long; do
-        bats_test_function --description "prints the long word list with $list_opt $length_opt" -- \
+        bats_test_function \
+            --description "prints the long word list with $list_opt $length_opt" -- \
             assert_long_wordlist "$list_opt" "$length_opt"
     done
 
     for length_opt in -4 --short; do
-        bats_test_function --description "prints the short word list with $list_opt $length_opt" -- \
+        bats_test_function \
+            --description "prints the short word list with $list_opt $length_opt" -- \
             assert_short_wordlist "$list_opt" "$length_opt"
     done
 done
@@ -96,12 +101,14 @@ assert_invalid_digits() {
 }
 
 for opt in -5 --long; do
-    bats_test_function --description "does not accept invalid digits with $opt" -- \
+    bats_test_function \
+        --description "does not accept invalid digits with $opt" -- \
         assert_invalid_digits 5 "$opt"
 done
 
 for opt in -4 --short; do
-    bats_test_function --description "does not accept invalid digits with $opt" -- \
+    bats_test_function \
+        --description "does not accept invalid digits with $opt" -- \
         assert_invalid_digits 4 "$opt"
 done
 
@@ -128,12 +135,14 @@ assert_too_short() {
 }
 
 for opt in -5 --long; do
-    bats_test_function --description "does not accept lines that are too short with $opt" -- \
+    bats_test_function \
+        --description "does not accept lines that are too short with $opt" -- \
         assert_too_short 5 "$opt"
 done
 
 for opt in -4 --short; do
-    bats_test_function --description "does not accept lines that are too short with $opt" -- \
+    bats_test_function \
+        --description "does not accept lines that are too short with $opt" -- \
         assert_too_short 4 "$opt"
 done
 
@@ -160,12 +169,14 @@ assert_too_long() {
 }
 
 for opt in -5 --long; do
-    bats_test_function --description "does not accept lines that are too long with $opt" -- \
+    bats_test_function \
+        --description "does not accept lines that are too long with $opt" -- \
         assert_too_long 5 "$opt"
 done
 
 for opt in -4 --short; do
-    bats_test_function --description "does not accept lines that are too long with $opt" -- \
+    bats_test_function \
+        --description "does not accept lines that are too long with $opt" -- \
         assert_too_long 4 "$opt"
 done
 
@@ -197,12 +208,14 @@ assert_input_stdin() {
 }
 
 for opt in -5 --long; do
-    bats_test_function --description "uses the long wordlist with $opt and input from stdin" -- \
+    bats_test_function \
+        --description "uses the long wordlist with $opt and input from stdin" -- \
         assert_input_stdin 5 "$opt"
 done
 
 for opt in -4 --short; do
-    bats_test_function --description "uses the short wordlist with $opt and input from stdin" -- \
+    bats_test_function \
+        --description "uses the short wordlist with $opt and input from stdin" -- \
         assert_input_stdin 4 "$opt"
 done
 
@@ -221,11 +234,13 @@ assert_input_file() {
 }
 
 for opt in -5 --long; do
-    bats_test_function --description "uses the long wordlist with $opt and input from a file" -- \
+    bats_test_function \
+        --description "uses the long wordlist with $opt and input from a file" -- \
         assert_input_file 5 "$opt"
 done
 
 for opt in -4 --short; do
-    bats_test_function --description "uses the short wordlist with $opt and input from a file" -- \
+    bats_test_function \
+        --description "uses the short wordlist with $opt and input from a file" -- \
         assert_input_file 4 "$opt"
 done

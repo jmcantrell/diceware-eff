@@ -16,20 +16,21 @@ assert_help() {
 }
 
 for flag in -h --help; do
-    bats_test_function --description "displays help with $flag" -- \
+    bats_test_function \
+        --description "displays help with $flag" -- \
         assert_help "$flag"
 done
 
 assert_version() {
-    local version="fake version"
-    printf "%s\n" "$version" >"$lib_dir"/version
+    printf "fake version\n" >"$lib_dir"/version
 
     run -0 diceroll "$@"
-    assert_output "$version"
+    assert_output "fake version"
 }
 
 for flag in -v --version; do
-    bats_test_function --description "prints version with $flag" -- \
+    bats_test_function \
+        --description "prints version with $flag" -- \
         assert_version "$flag"
 done
 
@@ -61,7 +62,8 @@ declare -A long_opts=([4]=short [5]=long)
 
 for roll_count in 4 5; do
     for opt in -"$roll_count" --"${long_opts[$roll_count]}"; do
-        bats_test_function --description "outputs $roll_count dice rolls with $opt" -- \
+        bats_test_function \
+            --description "outputs $roll_count dice rolls with $opt" -- \
             assert_rolls "$roll_count" "$opt"
     done
 done
