@@ -2,16 +2,16 @@
 
 set -euo pipefail
 
-file_pat='\.(ba)?sh$'
-shebang_pat='^#!.*[/ ](ba)?sh$'
+pattern_file='\.(ba)?sh$'
+pattern_shebang='^#!.*[/ ](ba)?sh$'
 
 while IFS= read -r -d '' file; do
     unset include
-    if [[ $file =~ $file_pat ]]; then
+    if [[ $file =~ $pattern_file ]]; then
         include=true
     elif grep -qI . -- "$file"; then
         first_line=$(head -n1 -- "$file")
-        if [[ $first_line =~ $shebang_pat ]]; then
+        if [[ $first_line =~ $pattern_shebang ]]; then
             include=true
         fi
     fi

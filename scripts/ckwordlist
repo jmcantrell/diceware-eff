@@ -16,7 +16,8 @@ if ((num_lines != expected_num_lines)); then
 fi
 
 line=1
-declare -A seen_rolls=() seen_words=()
+declare -A seen_rolls=()
+declare -A seen_words=()
 
 while read -r roll word; do
     if [[ -z $roll ]]; then
@@ -28,7 +29,7 @@ while read -r roll word; do
         exit 1
     fi
     if [[ ! $roll =~ ^[1-6]+$ ]]; then
-        printf "%s: roll on line %d contains invalid digit (must be 1-6): %s\n" "$self_name" "$line" "$roll" >&2
+        printf "%s: roll on line %d contains invalid digit (must be between 1 and 6): %s\n" "$self_name" "$line" "$roll" >&2
         exit 1
     fi
     if [[ -v seen_rolls[$roll] ]]; then
