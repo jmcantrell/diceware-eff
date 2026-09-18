@@ -22,10 +22,12 @@ for flag in -h --help; do
 done
 
 assert_version() {
-    printf "fake version\n" >"$lib_dir"/version
+    local fake_version="fake version $RANDOM"
+
+    printf "%s\n" "$fake_version" >"$lib_dir"/version
 
     run -0 dicegen "$@"
-    assert_output "fake version"
+    assert_output "$fake_version"
 }
 
 for flag in -v --version; do
