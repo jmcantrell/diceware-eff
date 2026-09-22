@@ -56,14 +56,14 @@ assert_rolls() {
     done
 }
 
+declare -A count_to_name=([4]=short [5]=long)
+
 @test "outputs 5 dice rolls by default" {
     assert_rolls 5
 }
 
-declare -A long_opts=([4]=short [5]=long)
-
 for roll_count in 4 5; do
-    for opt in -"$roll_count" --"${long_opts[$roll_count]}"; do
+    for opt in -"$roll_count" --"${count_to_name[$roll_count]}"; do
         bats_test_function \
             --description "outputs $roll_count dice rolls with $opt" -- \
             assert_rolls "$roll_count" "$opt"

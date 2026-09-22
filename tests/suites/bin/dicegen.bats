@@ -37,36 +37,30 @@ for flag in -v --version; do
 done
 
 assert_wordlist() {
-    local wordlist=${1:?missing wordlist}
+    local roll_count=${1:?missing roll count}
     shift
 
     run -0 dicegen "$@"
-    assert_output - <"$wordlist"
-}
-
-assert_long_wordlist() {
-    assert_wordlist ./share/wordlists/roll5 "$@"
+    assert_output - "$@" <./share/wordlists/roll"$roll_count"
 }
 
 assert_short_wordlist() {
     assert_wordlist ./share/wordlists/roll4 "$@"
 }
 
+declare -A count_to_name=([4]=short [5]=long)
+
 for list_opt in -l --list; do
     bats_test_function \
         --description "prints the long word list by default" -- \
-        assert_long_wordlist "$list_opt"
+        assert_wordlist 5 "$list_opt"
 
-    for length_opt in -5 --long; do
-        bats_test_function \
-            --description "prints the long word list with $list_opt $length_opt" -- \
-            assert_long_wordlist "$list_opt" "$length_opt"
-    done
-
-    for length_opt in -4 --short; do
-        bats_test_function \
-            --description "prints the short word list with $list_opt $length_opt" -- \
-            assert_short_wordlist "$list_opt" "$length_opt"
+    for roll_count in 4 5; do
+        for length_opt in -"$roll_count" --"${count_to_name[$roll_count]}"; do
+            bats_test_function \
+                --description "prints the ${count_to_name[$roll_count]} word list with $list_opt $length_opt" -- \
+                assert_wordlist "$roll_count" "$list_opt" "$length_opt"
+        done
     done
 done
 
@@ -102,16 +96,12 @@ assert_invalid_digits() {
     assert_invalid_digits 5
 }
 
-for opt in -5 --long; do
-    bats_test_function \
-        --description "does not accept invalid digits with $opt" -- \
-        assert_invalid_digits 5 "$opt"
-done
-
-for opt in -4 --short; do
-    bats_test_function \
-        --description "does not accept invalid digits with $opt" -- \
-        assert_invalid_digits 4 "$opt"
+for roll_count in 4 5; do
+    for opt in -"$roll_count" --"${count_to_name[$roll_count]}"; do
+        bats_test_function \
+            --description "does not accept invalid digits with $opt" -- \
+            assert_invalid_digits "$roll_count" "$opt"
+    done
 done
 
 assert_too_short() {
@@ -136,16 +126,12 @@ assert_too_short() {
     assert_too_short 5
 }
 
-for opt in -5 --long; do
-    bats_test_function \
-        --description "does not accept lines that are too short with $opt" -- \
-        assert_too_short 5 "$opt"
-done
-
-for opt in -4 --short; do
-    bats_test_function \
-        --description "does not accept lines that are too short with $opt" -- \
-        assert_too_short 4 "$opt"
+for roll_count in 4 5; do
+    for opt in -"$roll_count" --"${count_to_name[$roll_count]}"; do
+        bats_test_function \
+            --description "does not accept lines that are too short with $opt" -- \
+            assert_too_short "$roll_count" "$opt"
+    done
 done
 
 assert_too_long() {
@@ -170,16 +156,12 @@ assert_too_long() {
     assert_too_long 5
 }
 
-for opt in -5 --long; do
-    bats_test_function \
-        --description "does not accept lines that are too long with $opt" -- \
-        assert_too_long 5 "$opt"
-done
-
-for opt in -4 --short; do
-    bats_test_function \
-        --description "does not accept lines that are too long with $opt" -- \
-        assert_too_long 4 "$opt"
+for roll_count in 4 5; do
+    for opt in -"$roll_count" --"${count_to_name[$roll_count]}"; do
+        bats_test_function \
+            --description "does not accept lines that are too long with $opt" -- \
+            assert_too_long "$roll_count" "$opt"
+    done
 done
 
 assert_generated() {
@@ -209,16 +191,12 @@ assert_input_stdin() {
     assert_input_stdin 5
 }
 
-for opt in -5 --long; do
-    bats_test_function \
-        --description "uses the long wordlist with $opt and input from stdin" -- \
-        assert_input_stdin 5 "$opt"
-done
-
-for opt in -4 --short; do
-    bats_test_function \
-        --description "uses the short wordlist with $opt and input from stdin" -- \
-        assert_input_stdin 4 "$opt"
+for roll_count in 4 5; do
+    for opt in -"$roll_count" --"${count_to_name[$roll_count]}"; do
+        bats_test_function \
+            --description "uses the ${count_to_name[$roll_count]} wordlist with $opt and input from stdin" -- \
+            assert_input_stdin "$roll_count" "$opt"
+    done
 done
 
 assert_input_file() {
@@ -235,14 +213,10 @@ assert_input_file() {
     assert_input_file 5
 }
 
-for opt in -5 --long; do
-    bats_test_function \
-        --description "uses the long wordlist with $opt and input from a file" -- \
-        assert_input_file 5 "$opt"
-done
-
-for opt in -4 --short; do
-    bats_test_function \
-        --description "uses the short wordlist with $opt and input from a file" -- \
-        assert_input_file 4 "$opt"
+for roll_count in 4 5; do
+    for opt in -"$roll_count" --"${count_to_name[$roll_count]}"; do
+        bats_test_function \
+            --description "uses the ${count_to_name[$roll_count]} wordlist with $opt and input from a file" -- \
+            assert_input_file "$roll_count" "$opt"
+    done
 done
