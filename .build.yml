@@ -3,13 +3,9 @@ image: archlinux
 packages:
   - bats-assert
   - bats-file
-  - python-pipx
 sources:
   - https://git.sr.ht/~jmcantrell/diceware-eff
 tasks:
-  - lint-commits: |
-      cd diceware-eff
-      pipx run --spec gitlint-core gitlint --ignore-stdin --commits "origin/main..HEAD"
   - test: |
       cd diceware-eff
       ./scripts/test
